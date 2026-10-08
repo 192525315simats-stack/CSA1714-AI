@@ -1,0 +1,61 @@
+from collections import deque
+
+def safe(m, c):
+    if m < 0 or c < 0 or m > 3 or c > 3:
+        return False
+
+    # Missionaries should not be outnumbered
+    if m > 0 and m < c:
+        return False
+
+    # Check other side
+    rm = 3 - m
+    rc = 3 - c
+
+    if rm > 0 and rm < rc:
+        return False
+
+    return True
+
+
+def solve():
+    start = (3, 3, 0)   # missionaries, cannibals, boat
+    goal = (0, 0, 1)
+
+    queue = deque([(start, [])])
+    visited = {start}
+
+    moves = [(1,0), (2,0), (0,1), (0,2), (1,1)]
+
+    while queue:
+        state, path = queue.popleft()
+        m, c, boat = state
+
+        if state == goal:
+            print("Solution:")
+            for step in path:
+                print(step)
+            return
+
+        for dm, dc in moves:
+            if boat == 0:
+                nm = m - dm
+                nc = c - dc
+                nb = 1
+            else:
+                nm = m + dm
+                nc = c + dc
+                nb = 0
+
+            new_state = (nm, nc, nb)
+
+            if safe(nm, nc) and new_state not in visited:
+                visited.add(new_state)
+
+                side = "Left to Right" if boat == 0 else "Right to Left"
+                move = f"{side}: {dm} Missionary, {dc} Cannibal"
+
+                queue.append((new_state, path + [move]))
+
+
+solve()
