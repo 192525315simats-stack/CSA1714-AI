@@ -1,0 +1,47 @@
+#include <stdio.h>
+
+int main() {
+    int cost[4][4] = {
+        {0, 10, 15, 20},
+        {10, 0, 35, 25},
+        {15, 35, 0, 30},
+        {20, 25, 30, 0}
+    };
+
+    int queue[1000][6], front = 0, rear = 0;
+    int i, j, city, next, level;
+    int min = 9999, total;
+    int visited, mask;
+
+    queue[rear][0] = 0;
+    queue[rear][1] = 1;
+    queue[rear][2] = 0;
+    rear++;
+
+    while (front < rear) {
+        city = queue[front][0];
+        mask = queue[front][1];
+        total = queue[front][2];
+        front++;
+
+        if (mask == 15) {
+            total += cost[city][0];
+            if (total < min)
+                min = total;
+            continue;
+        }
+
+        for (next = 0; next < 4; next++) {
+            if (!(mask & (1 << next))) {
+                queue[rear][0] = next;
+                queue[rear][1] = mask | (1 << next);
+                queue[rear][2] = total + cost[city][next];
+                rear++;
+            }
+        }
+    }
+
+    printf("Minimum travelling cost = %d\n", min);
+
+    return 0;
+}
