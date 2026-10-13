@@ -1,0 +1,29 @@
+graph = {
+    'A': [('B', 1), ('C', 3)],
+    'B': [('D', 1)],
+    'C': [('D', 1)],
+    'D': []
+}
+
+h = {'A': 3, 'B': 1, 'C': 1, 'D': 0}
+
+open_list = [(h['A'], 0, 'A')]
+visited = set()
+
+while open_list:
+    open_list.sort()
+    f, g, node = open_list.pop(0)
+
+    if node in visited:
+        continue
+
+    visited.add(node)
+    print(node, end=" ")
+
+    if node == 'D':
+        break
+
+    for child, cost in graph[node]:
+        if child not in visited:
+            new_g = g + cost
+            open_list.append((new_g + h[child], new_g, child))
