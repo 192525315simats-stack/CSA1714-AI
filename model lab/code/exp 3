@@ -1,0 +1,24 @@
+% student(StudentId, Name).
+student(1, alice).
+student(2, bob).
+student(3, carol).
+
+% course(CourseId, CourseName).
+course(ai, artificial_intelligence).
+course(db, databases).
+
+% faculty(FacultyId, Name).
+faculty(10, dr_smith).
+faculty(11, dr_jones).
+
+% enrollment(StudentId, CourseId).
+enrollment(1, ai).
+enrollment(2, ai).
+enrollment(3, db).
+
+% Find students enrolled in a particular course.
+students_in_course(CourseId, Students) :-
+    findall(Name,
+            (enrollment(StudentId, CourseId),
+             student(StudentId, Name)),
+            Students).
