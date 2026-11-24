@@ -1,0 +1,48 @@
+graph = {
+    "A": ["B", "C"],
+    "B": ["D", "E"],
+    "C": ["F", "G"],
+    "D": ["H"],
+    "E": ["H"],
+    "F": ["H"],
+    "G": ["H"],
+    "H": [],
+}
+
+# Lower heuristic values are better
+heuristic = {
+    "A": 5, "B": 4, "C": 3, "D": 3,
+    "E": 2, "F": 2, "G": 1, "H": 0,
+}
+
+
+def beam_search(start, goal, width):
+    beam = [[start]]
+
+    while beam:
+        candidates = []
+
+        for path in beam:
+            node = path[-1]
+
+            if node == goal:
+                return path
+
+            for neighbor in graph[node]:
+                if neighbor not in path:
+                    candidates.append(path + [neighbor])
+
+        # Keep only the best `width` paths
+        candidates.sort(key=lambda path: heuristic[path[-1]])
+        beam = candidates[:width]
+
+    return None
+
+
+width = 2
+path = beam_search("A", "H", width)
+
+if path:
+    print("Best path:", " -> ".join(path))
+else:
+    print("No path found")
