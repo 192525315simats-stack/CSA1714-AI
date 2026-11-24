@@ -1,0 +1,27 @@
+% Clause 1: not human(X) OR mortal(X)
+% Clause 2: human(socrates)
+% Negated goal: not mortal(socrates)
+
+resolve :-
+    clause1(C1),
+    clause2(C2),
+    negated_goal(NegGoal),
+    resolution_step(C1, C2, R1),
+    resolution_step(R1, NegGoal, R2),
+    R2 = [],
+    write('Derived the empty clause: []'), nl,
+    write('Therefore, Socrates is mortal.'), nl.
+
+clause1([not(human(X)), mortal(X)]).
+clause2([human(socrates)]).
+negated_goal([not(mortal(socrates))]).
+
+% Resolve two clauses by removing complementary literals.
+resolution_step(C1, C2, Result) :-
+    select(Literal, C1, Rest1),
+    complement(Literal, Opposite),
+    select(Opposite, C2, Rest2),
+    append(Rest1, Rest2, Result).
+
+complement(not(X), X).
+complement(X, not(X)).
